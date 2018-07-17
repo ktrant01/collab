@@ -42,7 +42,7 @@ $('.malwareSearch').on('click', function (){
 
     var screenshotApi = "6bdaeb"
     var screenshotUrl = "http://api.screenshotmachine.com/?key=" + screenshotApi + "&dimension=800x600&url=" + submission;
-    var cuckooUrl     = "http://192.168.29.160:8090/tasks/create/url"
+    var cuckooUrl     = "http://73.15.167.194:8090/tasks/create/url"
     $('#results').empty()
     console.log(url)
  
@@ -141,12 +141,12 @@ for(var key in result.scans) {
 function screengrab (){
 //Get Screenshots Cuckoo Sandbox
      $.ajax({
-      url: "http://192.168.29.160:8090/tasks/screenshots/11/0003",
+      url: "http://73.15.167.194/tasks/screenshots/11/0003",
 
     type: 'GET',
       }).then(function(result) {
         var image = $('<img>')
-        image.attr('src', "http://192.168.29.160:8090/tasks/screenshots/11/0003")
+        image.attr('src', "http://73.15.167.194:8090/tasks/screenshots/11/0003")
 
           $('#virustotalResults').append(image)
 
