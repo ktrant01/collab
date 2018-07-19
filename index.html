@@ -5,6 +5,11 @@
   <meta charset="UTF-8">
   <title>Project 1</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <style type="text/css">
+    .hide {
+      display: none;
+    }
+  </style>
 </head>
 
 <body>
@@ -18,12 +23,17 @@
 <a id="band" href=""></a>
 
 
+<br>
+
+<p class="hide"><b>Did you find this helpful?</b></p>
+  <p class="hide"><span id="click-value"></span>Likes</p>
+<button class="hide" id="click-button1">Thumbs up</button>
+<button class="hide" id="click-button2">Thumbs down</button>
+
+
   <!-- Added link to the jQuery Library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script type="text/javascript">
-
-
-
     var submission = ""
     var apikey = "54dfff9c4b234c12bff4b0de2ee77c38099dbf17b30095d8862e2e2447265480"
     var url =    "http://www.virustotal.com/vtapi/v2/url/report?apikey=" + apikey + "&resource=" + submission;
@@ -32,59 +42,39 @@
     var button;
     var screenshotApi = "6bdaeb"
     var screenshotUrl = "hhttp://api.screenshotmachine.com/?key=" + screenshotApi + "&dimension=800x600&url=" + screenshotUrl;
-
-
 $('.malwareSearch').on('click', function (){
     event.preventDefault();
     submission = $('input').val();
     var apikey = "54dfff9c4b234c12bff4b0de2ee77c38099dbf17b30095d8862e2e2447265480"
     var url =    "http://www.virustotal.com/vtapi/v2/url/report?apikey=" + apikey + "&resource=" + submission;
-
     var screenshotApi = "6bdaeb"
     var screenshotUrl = "http://api.screenshotmachine.com/?key=" + screenshotApi + "&dimension=800x600&url=" + submission;
     var cuckooUrl     = "http://73.15.167.194:8090/tasks/create/url"
     $('#results').empty()
     console.log(url)
- 
 
+    dataRef.ref("URL").push({
+      url: submission
+    })
+ 
 //VirusTotal API Connector
       $.ajax({
       url: url,
-    //   dataType: 'JSONp',
-    //   crossDomain: true,
-    // jsonpCallback: 'callback',
+    
     type: 'GET',
     success: function (result, status, request, data) {
             console.log('Success');
             console.log(result);
             console.log(status);
-            // var json = $.parseJSON(data);
             
-            
-            // $('div').text(JSON.stringify(result.scans))
-            
-            //Post scan status
-            // for (key in result.scans)
-
-// $.each(result.scans, function(key) {
-//     console.log(key); 
-//     debugger
-// });
-
-
-
 for(var key in result.scans) {
      console.log(key + ": " +result.scans[key].result); 
-
      if (result.scans[key].result != "clean site" && result.scans[key].result != "unrated site"){
     var scanResult = $('<div>').text(key + ": " +result.scans[key].result)
     $('#virustotalResults').append(scanResult)}
-
 }
-
            
-
-            // $('div').text(JSON.stringify(res));
+            
         },
         error: function (request, textStatus, errorThrown, data) {
             console.log('Error');
@@ -97,90 +87,41 @@ for(var key in result.scans) {
             console.log(callback)
         }
         
-
 });
-
-
 //Screenshot API Connector
       $.ajax({
       url: screenshotUrl,
     //   dataType: 'JSONp',
     //   crossDomain: true,
     // jsonpCallback: 'callback',
-
     type: 'GET',
       }).then(function(result) {
         console.log(screenshotUrl)
-
             console.log(result);
     })
-
 //Cuckoo Malware Sandbox API Connector
      $.ajax({
       url: cuckooUrl,
       data: {"url" : submission},
-
     type: 'POST',
       }).then(function(result) {
         console.log(screenshotUrl)
-
             console.log(result);
             console.log(result.task_id)
     })
-
-
-
-
-
-
-
-
-
 })
-
 function screengrab (){
 //Get Screenshots Cuckoo Sandbox
      $.ajax({
       url: "http://73.15.167.194/tasks/screenshots/11/0003",
-
     type: 'GET',
       }).then(function(result) {
         var image = $('<img>')
         image.attr('src', "http://73.15.167.194:8090/tasks/screenshots/11/0003")
-
           $('#virustotalResults').append(image)
-
             console.log(result);
-
     })
 }
-
-
-
-//Firebase
-
-// firebase.initializeApp(config);
-
-// Create a variable to reference the database.
-// var database = firebase.database();
-
-
-
-//https://www.virustotal.com/vtapi/v2/url/report?apikey=<apikey>&resource=<resource>'
-
-// $('img').hover(function(){
-//   // alert($(this).data('animate'))
-//   $(this).attr('src', $(this).data('animate'))
-//   }, function(){
-//   $(this).attr('src', $(this).data('still'))
-// })
-
-// $('img').hover(function(){
-//   // alert($(this).data('animate'))
-//   $(this).attr('src', $(this).data('animate'))
-//   }, function(){
-//   $(this).attr('src', $(this).data('still'))
-// })
 
 $('.newItem').on('click', function(){
     event.preventDefault();
@@ -188,8 +129,58 @@ $('.newItem').on('click', function(){
 		emotions.push(input_value);
         var button = $('<button>').text(input_value).attr('class', 'selection')
         $('#buttons').prepend(button)
-
 })
+</script>
+
+
+
+<script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
+  
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery.js"></script>
+
+<!-- Script -->
+<script>
+  
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyAGuY5_Od3xpBrOBlPzKW66uBHsX03UW1Q",
+    authDomain: "project1-d126f.firebaseapp.com",
+    databaseURL: "https://project1-d126f.firebaseio.com",
+    projectId: "project1-d126f",
+    storageBucket: "project1-d126f.appspot.com",
+    messagingSenderId: "179003919748"
+  };
+  firebase.initializeApp(config);
+  
+  var dataRef = firebase.database();
+  
+  // Initial Values
+  var clickCounter1 = 0;
+  var clickCounter2 = 0;
+  $(".malwareSearch").on("click", function() { 
+    $('button').show()
+    $('p').show()
+  });
+
+// On Click of Button
+$("#click-button1").on("click", function() {
+clickCounter1++;
+dataRef.ref().set({
+clickCountUp: clickCounter1
+  });
+});
+
+
+$("#click-button2").on("click", function() {
+clickCounter2++;
+dataRef.ref().set({
+clickCountDown: clickCounter2
+  });
+});
+
+
+
 </script>
 
 </body>
