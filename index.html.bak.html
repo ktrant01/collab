@@ -5,22 +5,6 @@
   <meta charset="UTF-8">
   <title>Project 1</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-
-  <style>
-    #myProgress {
-      width: 100%;
-      background-color: #ddd;
-    }
-    
-    #myBar {
-      width: 10%;
-      height: 30px;
-      background-color: #4CAF50;
-      text-align: center;
-      line-height: 30px;
-      color: white;
-    }
-    </style>
 </head>
 
 <body>
@@ -31,14 +15,11 @@
                 <button class=malwareSearch>Submit</button>
             </form>
 <div id="virustotalResults">VirusTotal Results:</div>
-<div id="myBar"></div>
-
-
+<a id="band" href=""></a>
 
 
   <!-- Added link to the jQuery Library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
   <script type="text/javascript">
 
 
@@ -46,57 +27,12 @@
     var submission = ""
     var apikey = "54dfff9c4b234c12bff4b0de2ee77c38099dbf17b30095d8862e2e2447265480"
     var url =    "http://www.virustotal.com/vtapi/v2/url/report?apikey=" + apikey + "&resource=" + submission;
-    var scanResult = ""
+    var scanResult;
     var input_value;
     var button;
     var screenshotApi = "6bdaeb"
     var screenshotUrl = "hhttp://api.screenshotmachine.com/?key=" + screenshotApi + "&dimension=800x600&url=" + screenshotUrl;
-    var resultsTron;
 
-  // Initialize Firebase
-  var config = {
-    apiKey: "AIzaSyAGuY5_Od3xpBrOBlPzKW66uBHsX03UW1Q",
-    authDomain: "project1-d126f.firebaseapp.com",
-    databaseURL: "https://project1-d126f.firebaseio.com",
-    projectId: "project1-d126f",
-    storageBucket: "project1-d126f.appspot.com",
-    messagingSenderId: "179003919748"
-    };
-    
-    firebase.initializeApp(config);
-    
-    var dataRef = firebase.database();
-    
-    // Initial Values
-    // var name = "";
-    // var email = "";
-    // var age = 0;
-    // var comment = "";
-    
-    // Capture Button Click
-    // $("#add-user").on("click", function(event) {
-    //   event.preventDefault();
-      
-      // YOUR TASK!!!
-      // Code in the logic for storing and retrieving the most recent user.
-      // Don't forget to provide initial data to your Firebase database.
-      // name = $("#name-input").val().trim();
-      // email = $("#email-input").val().trim();
-      // age = $("#age-input").val().trim();
-      // comment = $("#comment-input").val().trim();
-      
-      // Code for the push
-      // dataRef.ref().push({
-      //   url: url
-        // name: name,
-        // email: email,
-        // age: age,
-        // comment: comment,
-        // dateAdded: firebase.database.ServerValue.TIMESTAMP
-      // });
-    // });
-    
-   
 
 $('.malwareSearch').on('click', function (){
     event.preventDefault();
@@ -109,18 +45,6 @@ $('.malwareSearch').on('click', function (){
     var cuckooUrl     = "http://73.15.167.194:8090/tasks/create/url"
     $('#results').empty()
     console.log(url)
-    progressBar()
-    screengrab ()
-    // dataRef.ref("URL").push({
-    //     url: submission,
-        // Scanresult: scanResult
-        // name: name,
-        // email: email,
-        // age: age,
-        // comment: comment,
-        // dateAdded: firebase.database.ServerValue.TIMESTAMP
-      // });
- 
  
 
 //VirusTotal API Connector
@@ -151,15 +75,10 @@ $('.malwareSearch').on('click', function (){
 
 for(var key in result.scans) {
      console.log(key + ": " +result.scans[key].result); 
-     resultsTron = key + ": " +result.scans[key].result
-     dataRef.ref().push({
-        Scanresult: resultsTron
-      });
 
      if (result.scans[key].result != "clean site" && result.scans[key].result != "unrated site"){
     var scanResult = $('<div>').text(key + ": " +result.scans[key].result)
     $('#virustotalResults').append(scanResult)}
-
 
 }
 
@@ -197,17 +116,17 @@ for(var key in result.scans) {
     })
 
 //Cuckoo Malware Sandbox API Connector
-    //  $.ajax({
-    //   url: cuckooUrl,
-    //   data: {"url" : submission},
+     $.ajax({
+      url: cuckooUrl,
+      data: {"url" : submission},
 
-    // type: 'POST',
-    //   }).then(function(result) {
-    //     console.log(screenshotUrl)
+    type: 'POST',
+      }).then(function(result) {
+        console.log(screenshotUrl)
 
-    //         console.log(result);
-    //         console.log(result.task_id)
-    // })
+            console.log(result);
+            console.log(result.task_id)
+    })
 
 
 
@@ -220,44 +139,23 @@ for(var key in result.scans) {
 })
 
 function screengrab (){
-  var image = $('<img>')
-        image.attr('src', "http://73.15.167.194:8090/tasks/screenshots/22/0003")
+//Get Screenshots Cuckoo Sandbox
+     $.ajax({
+      url: "http://73.15.167.194/tasks/screenshots/11/0003",
+
+    type: 'GET',
+      }).then(function(result) {
+        var image = $('<img>')
+        image.attr('src', "http://73.15.167.194:8090/tasks/screenshots/11/0003")
 
           $('#virustotalResults').append(image)
 
+            console.log(result);
 
-
-// <!-- 
-// //Get Screenshots Cuckoo Sandbox
-//      $.ajax({
-//       url: "http://73.15.167.194/tasks/screenshots/22/0003",
-
-//     type: 'GET',
-//       }).then(function(result) {
-//         var image = $('<img>')
-//         image.attr('src', "http://73.15.167.194:8090/tasks/screenshots/22/0003")
-
-//           $('#virustotalResults').append(image)
-
-//             console.log(result);
-
-//     }) -->
+    })
 }
 
-function progressBar() {
-  var elem = document.getElementById("myBar"); 
-    var width = 10;
-    var id = setInterval(frame, 700);
-    function frame() {
-        if (width >= 100) {
-            clearInterval(id);
-        } else {
-            width++; 
-            elem.style.width = width + '%'; 
-            elem.innerHTML = width * 1 + '%';
-        }
-    }
-}
+
 
 //Firebase
 
