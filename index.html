@@ -43,7 +43,7 @@
 
 
 
-    var submission = ""
+    var submission = "www.hshssni6usbi9u.com"
     var apikey = "54dfff9c4b234c12bff4b0de2ee77c38099dbf17b30095d8862e2e2447265480"
     var url =    "http://www.virustotal.com/vtapi/v2/url/report?apikey=" + apikey + "&resource=" + submission;
     var scanResult = ""
@@ -52,6 +52,7 @@
     var screenshotApi = "6bdaeb"
     var screenshotUrl = "hhttp://api.screenshotmachine.com/?key=" + screenshotApi + "&dimension=800x600&url=" + screenshotUrl;
     var resultsTron;
+    var virustotalSubmit = "https://www.virustotal.com/vtapi/v2/url/scan"
 
   // Initialize Firebase
   var config = {
@@ -63,98 +64,47 @@
     messagingSenderId: "179003919748"
     };
     
-    firebase.initializeApp(config);
     
-    var dataRef = firebase.database();
     
-    // Initial Values
-    // var name = "";
-    // var email = "";
-    // var age = 0;
-    // var comment = "";
-    
-    // Capture Button Click
-    // $("#add-user").on("click", function(event) {
-    //   event.preventDefault();
-      
-      // YOUR TASK!!!
-      // Code in the logic for storing and retrieving the most recent user.
-      // Don't forget to provide initial data to your Firebase database.
-      // name = $("#name-input").val().trim();
-      // email = $("#email-input").val().trim();
-      // age = $("#age-input").val().trim();
-      // comment = $("#comment-input").val().trim();
-      
-      // Code for the push
-      // dataRef.ref().push({
-      //   url: url
-        // name: name,
-        // email: email,
-        // age: age,
-        // comment: comment,
-        // dateAdded: firebase.database.ServerValue.TIMESTAMP
-      // });
-    // });
-    
-   
-
 $('.malwareSearch').on('click', function (){
     event.preventDefault();
-    submission = $('input').val();
+    // submission = $('input').val();
     var apikey = "54dfff9c4b234c12bff4b0de2ee77c38099dbf17b30095d8862e2e2447265480"
     var url =    "http://www.virustotal.com/vtapi/v2/url/report?apikey=" + apikey + "&resource=" + submission;
 
-    var screenshotApi = "6bdaeb"
-    var screenshotUrl = "http://api.screenshotmachine.com/?key=" + screenshotApi + "&dimension=800x600&url=" + submission;
-    var cuckooUrl     = "http://73.15.167.194:8090/tasks/create/url"
+
+    
     $('#results').empty()
     console.log(url)
     progressBar()
-    screengrab ()
-    // dataRef.ref("URL").push({
-    //     url: submission,
-        // Scanresult: scanResult
-        // name: name,
-        // email: email,
-        // age: age,
-        // comment: comment,
-        // dateAdded: firebase.database.ServerValue.TIMESTAMP
-      // });
- 
+
+    virustotalurlReport()
+    })
  
 
 //VirusTotal API Connector
+function virustotalurlReport(){
+
       $.ajax({
       url: url,
-    //   dataType: 'JSONp',
-    //   crossDomain: true,
-    // jsonpCallback: 'callback',
-    type: 'GET',
-    success: function (result, status, request, data) {
-            console.log('Success');
-            console.log(result);
-            console.log(status);
-            // var json = $.parseJSON(data);
-            
-            
-            // $('div').text(JSON.stringify(result.scans))
-            
-            //Post scan status
-            // for (key in result.scans)
+      type: 'GET',
+      success: function (result, status, request, data) {
+      console.log(result)
 
-// $.each(result.scans, function(key) {
-//     console.log(key); 
-//     debugger
-// });
 
+      if (result.response_code == 0){
+        console.log("URL hasn't been scanned on Virus Total before, submitting now:")
+        vtSubmit()
+        setTimeout(virustotalurlReport, 7000);
+      }
+      
+      
 
 
 for(var key in result.scans) {
-     console.log(key + ": " +result.scans[key].result); 
-     resultsTron = key + ": " +result.scans[key].result
-     dataRef.ref().push({
-        Scanresult: resultsTron
-      });
+      console.log(key + ": " +result.scans[key].result); 
+      resultsTron = key + ": " +result.scans[key].result
+
 
      if (result.scans[key].result != "clean site" && result.scans[key].result != "unrated site"){
     var scanResult = $('<div>').text(key + ": " +result.scans[key].result)
@@ -162,9 +112,6 @@ for(var key in result.scans) {
 
 
 }
-
-           
-
             // $('div').text(JSON.stringify(res));
         },
         error: function (request, textStatus, errorThrown, data) {
@@ -180,23 +127,21 @@ for(var key in result.scans) {
         
 
 });
-
+}
 
 //Screenshot API Connector
+function screenshotmachine(){
       $.ajax({
       url: screenshotUrl,
-    //   dataType: 'JSONp',
-    //   crossDomain: true,
-    // jsonpCallback: 'callback',
-
     type: 'GET',
       }).then(function(result) {
         console.log(screenshotUrl)
 
             console.log(result);
     })
+  }
 
-//Cuckoo Malware Sandbox API Connector
+// Cuckoo Malware Sandbox API Connector
     //  $.ajax({
     //   url: cuckooUrl,
     //   data: {"url" : submission},
@@ -210,23 +155,18 @@ for(var key in result.scans) {
     // })
 
 
+//Virus Total Submit URL
 
 
 
 
 
-
-
-})
 
 function screengrab (){
   var image = $('<img>')
         image.attr('src', "http://73.15.167.194:8090/tasks/screenshots/22/0003")
 
           $('#virustotalResults').append(image)
-
-
-
 // <!-- 
 // //Get Screenshots Cuckoo Sandbox
 //      $.ajax({
@@ -259,6 +199,23 @@ function progressBar() {
     }
 }
 
+function vtSubmit(){
+     $.ajax({
+      url: virustotalSubmit,
+      data: {"apikey" : apikey,
+      "url" : submission},
+      
+
+    type: 'POST',
+      }).then(function(result) {
+
+            console.log(result);
+            console.log(result.task_id)
+    })
+  }
+
+
+  
 //Firebase
 
 // firebase.initializeApp(config);
