@@ -4,7 +4,6 @@
 <head>
   <meta charset="UTF-8">
   <title>Project 1</title>
-  <link rel="stylesheet" href="reset.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
   <style type="text/css">
     .hide {
@@ -17,63 +16,33 @@
     }
     
     #myBar {
-      /* width: 10%; */
+      width: 10%;
       height: 30px;
       background-color: #4CAF50;
       text-align: center;
       line-height: 30px;
       color: white;
     }
-
-    input {
-    width: 448px;
-}
-
-
-    
   </style>
 </head>
 
 <body>
 
-    <div class="container-fluid text-center">
-        <div class="row">
-            <div class="col-sm">
-            <div class="jumbotron">
-                <h1 class="display-4">Is this link safe?</h1>
-                <p class="lead">We're taking the guesswork and risk out of those suspicious links.</p>
-                <hr class="my-4">
-                <p>Just paste that link, click submit, and we'll analyze it for you.</p>
-                <p class="lead">
-                    <form></form><input><br><br>
-                  <a class="btn btn-primary btn-lg malwareSearch" href="#" role="button">Submit</a>
-                </p>
-                </form>
-                <div class="mybar"></div>
-                <div id="virustotalResults"></div>
-                <p class="hide"><b>Did you find this helpful?</b></p>
-  <p class="hide"><span id="click-value"></span>Likes</p>
-<button class="hide" id="click-button1">Thumbs up</button>
-<button class="hide" id="click-button2">Thumbs down</button>
-
-              
-
-
-
-
-                        
-                     
-
-
-                      </div>
-
-
-
+        <form>
+                <input type="text">
+            
+                <button class=malwareSearch>Submit</button>
+            </form>
+<div id="virustotalResults">VirusTotal Results:</div>
+<div id="myBar"></div>
 
 
 <br>
 
-
+<p class="hide"><b>Did you find this helpful?</b></p>
+  <p class="hide"><span id="click-value"></span>Likes</p>
+<button class="hide" id="click-button1">Thumbs up</button>
+<button class="hide" id="click-button2">Thumbs down</button>
 
 
   <!-- Added link to the jQuery Library -->
@@ -113,7 +82,7 @@ $('.malwareSearch').on('click', function (){
 
     
     $('#results').empty()
-    // progressBar()
+    progressBar()
 
     virustotalurlReport(url)
     submitCuckoo(submission)

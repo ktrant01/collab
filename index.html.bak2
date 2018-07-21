@@ -4,93 +4,55 @@
 <head>
   <meta charset="UTF-8">
   <title>Project 1</title>
-  <link rel="stylesheet" href="reset.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-  <style type="text/css">
-    .hide {
-      display: none;
-    }
 
+  <style>
     #myProgress {
       width: 100%;
       background-color: #ddd;
     }
     
     #myBar {
-      /* width: 10%; */
+      width: 10%;
       height: 30px;
       background-color: #4CAF50;
       text-align: center;
       line-height: 30px;
       color: white;
     }
-
-    input {
-    width: 448px;
-}
-
-
-    
-  </style>
+    </style>
 </head>
 
 <body>
 
-    <div class="container-fluid text-center">
-        <div class="row">
-            <div class="col-sm">
-            <div class="jumbotron">
-                <h1 class="display-4">Is this link safe?</h1>
-                <p class="lead">We're taking the guesswork and risk out of those suspicious links.</p>
-                <hr class="my-4">
-                <p>Just paste that link, click submit, and we'll analyze it for you.</p>
-                <p class="lead">
-                    <form></form><input><br><br>
-                  <a class="btn btn-primary btn-lg malwareSearch" href="#" role="button">Submit</a>
-                </p>
-                </form>
-                <div class="mybar"></div>
-                <div id="virustotalResults"></div>
-                <p class="hide"><b>Did you find this helpful?</b></p>
-  <p class="hide"><span id="click-value"></span>Likes</p>
-<button class="hide" id="click-button1">Thumbs up</button>
-<button class="hide" id="click-button2">Thumbs down</button>
-
-              
-
-
-
-
-                        
-                     
-
-
-                      </div>
-
-
-
-
-
-<br>
+        <form>
+                <input type="text">
+            
+                <button class=malwareSearch>Submit</button>
+            </form>
+<div id="virustotalResults">VirusTotal Results:</div>
+<div id="myBar"></div>
 
 
 
 
   <!-- Added link to the jQuery Library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
   <script type="text/javascript">
-    var submission = ""
+
+
+
+    var submission = "www.hshssni6usbi9u.com"
     var apikey = "54dfff9c4b234c12bff4b0de2ee77c38099dbf17b30095d8862e2e2447265480"
     var url =    "http://www.virustotal.com/vtapi/v2/url/report?apikey=" + apikey + "&resource=" + submission;
-    var scanResult;
+    var scanResult = ""
     var input_value;
     var button;
     var screenshotApi = "6bdaeb"
     var screenshotUrl = "hhttp://api.screenshotmachine.com/?key=" + screenshotApi + "&dimension=800x600&url=" + screenshotUrl;
     var resultsTron;
     var virustotalSubmit = "https://www.virustotal.com/vtapi/v2/url/scan"
-    var cuckooUrl = "http://73.15.167.194:8090/tasks/create/url"
-    var taskid;
 
   // Initialize Firebase
   var config = {
@@ -106,24 +68,22 @@
     
 $('.malwareSearch').on('click', function (){
     event.preventDefault();
-
+    // submission = $('input').val();
     var apikey = "54dfff9c4b234c12bff4b0de2ee77c38099dbf17b30095d8862e2e2447265480"
     var url =    "http://www.virustotal.com/vtapi/v2/url/report?apikey=" + apikey + "&resource=" + submission;
-    submission = $('input').val();
+
 
     
     $('#results').empty()
-    // progressBar()
+    console.log(url)
+    progressBar()
 
-    virustotalurlReport(url)
-    submitCuckoo(submission)
+    virustotalurlReport()
     })
  
 
 //VirusTotal API Connector
-function virustotalurlReport(url){
-  submission = $('input').val();
-  var url =    "http://www.virustotal.com/vtapi/v2/url/report?apikey=" + apikey + "&resource=" + submission;
+function virustotalurlReport(){
 
       $.ajax({
       url: url,
@@ -134,9 +94,13 @@ function virustotalurlReport(url){
 
       if (result.response_code == 0){
         console.log("URL hasn't been scanned on Virus Total before, submitting now:")
-        vtSubmit(submission)
+        vtSubmit()
+        setTimeout(virustotalurlReport, 7000);
       }
       
+      
+
+
 for(var key in result.scans) {
       console.log(key + ": " +result.scans[key].result); 
       resultsTron = key + ": " +result.scans[key].result
@@ -160,6 +124,8 @@ for(var key in result.scans) {
             var json = $.parseJSON(data);
             console.log(callback)
         }
+        
+
 });
 }
 
@@ -176,24 +142,29 @@ function screenshotmachine(){
   }
 
 // Cuckoo Malware Sandbox API Connector
-function submitCuckoo(submission){
-     $.ajax({
-      url: cuckooUrl,
-      data: {"url" : submission},
+    //  $.ajax({
+    //   url: cuckooUrl,
+    //   data: {"url" : submission},
 
-    type: 'POST',
-      }).then(function(result) {
-        console.log(screenshotUrl)
+    // type: 'POST',
+    //   }).then(function(result) {
+    //     console.log(screenshotUrl)
 
-            console.log(result);
-            console.log(result.task_id)
-            taskid = result.task_id
-    })
-}
+    //         console.log(result);
+    //         console.log(result.task_id)
+    // })
 
-function screengrab (taskid){
+
+//Virus Total Submit URL
+
+
+
+
+
+
+function screengrab (){
   var image = $('<img>')
-        image.attr('src', "http://73.15.167.194:8090/tasks/screenshots/" + taskid + "/0003")
+        image.attr('src', "http://73.15.167.194:8090/tasks/screenshots/22/0003")
 
           $('#virustotalResults').append(image)
 // <!-- 
@@ -213,7 +184,6 @@ function screengrab (taskid){
 //     }) -->
 }
 
-//Progress Bar
 function progressBar() {
   var elem = document.getElementById("myBar"); 
     var width = 10;
@@ -229,13 +199,11 @@ function progressBar() {
     }
 }
 
-//Virus Total Submit URL
-function vtSubmit(submission){
+function vtSubmit(){
      $.ajax({
       url: virustotalSubmit,
       data: {"apikey" : apikey,
       "url" : submission},
-      
       
 
     type: 'POST',
@@ -244,60 +212,43 @@ function vtSubmit(submission){
             console.log(result);
             console.log(result.task_id)
     })
-    setTimeout(virustotalurlReport, 7000);
   }
 
-</script>
 
-
-
-<script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
   
-<!-- jQuery -->
-<script src="https://code.jquery.com/jquery.js"></script>
+//Firebase
 
-<!-- Script -->
-<script>
-  
-  // Initialize Firebase
-  var config = {
-    apiKey: "AIzaSyAGuY5_Od3xpBrOBlPzKW66uBHsX03UW1Q",
-    authDomain: "project1-d126f.firebaseapp.com",
-    databaseURL: "https://project1-d126f.firebaseio.com",
-    projectId: "project1-d126f",
-    storageBucket: "project1-d126f.appspot.com",
-    messagingSenderId: "179003919748"
-  };
-  firebase.initializeApp(config);
-  
-  var dataRef = firebase.database();
-  
-  // Initial Values
-  var clickCounter1 = 0;
-  var clickCounter2 = 0;
-  $(".malwareSearch").on("click", function() { 
-    $('button').show()
-    $('p').show()
-  });
+// firebase.initializeApp(config);
 
-// On Click of Button
-$("#click-button1").on("click", function() {
-clickCounter1++;
-dataRef.ref().set({
-clickCountUp: clickCounter1
-  });
-});
-
-
-$("#click-button2").on("click", function() {
-clickCounter2++;
-dataRef.ref().set({
-clickCountDown: clickCounter2
-  });
-});
+// Create a variable to reference the database.
+// var database = firebase.database();
 
 
 
+//https://www.virustotal.com/vtapi/v2/url/report?apikey=<apikey>&resource=<resource>'
+
+// $('img').hover(function(){
+//   // alert($(this).data('animate'))
+//   $(this).attr('src', $(this).data('animate'))
+//   }, function(){
+//   $(this).attr('src', $(this).data('still'))
+// })
+
+// $('img').hover(function(){
+//   // alert($(this).data('animate'))
+//   $(this).attr('src', $(this).data('animate'))
+//   }, function(){
+//   $(this).attr('src', $(this).data('still'))
+// })
+
+$('.newItem').on('click', function(){
+    event.preventDefault();
+		var input_value = $('input').val();
+		emotions.push(input_value);
+        var button = $('<button>').text(input_value).attr('class', 'selection')
+        $('#buttons').prepend(button)
+
+})
 </script>
 
 </body>
