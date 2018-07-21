@@ -49,8 +49,9 @@
                   <a class="btn btn-primary btn-lg malwareSearch" href="#" role="button">Submit</a>
                 </p>
                 </form>
-                <div class="mybar"></div>
-                <div id="virustotalResults"></div>
+                <h1 id="virustotalResults"></h1>
+                <progress value="0" max="10" id="progressBar"></progress>
+
                 <p class="hide"><b>Did you find this helpful?</b></p>
   <p class="hide"><span id="click-value"></span>Likes</p>
 <button class="hide" id="click-button1">Thumbs up</button>
@@ -92,6 +93,7 @@
     var cuckooUrl = "http://73.15.167.194:8090/tasks/create/url"
     var taskid;
 
+
   // Initialize Firebase
   var config = {
     apiKey: "AIzaSyAGuY5_Od3xpBrOBlPzKW66uBHsX03UW1Q",
@@ -116,7 +118,13 @@ $('.malwareSearch').on('click', function (){
     // progressBar()
 
     virustotalurlReport(url)
-    submitCuckoo(submission)
+    // submitCuckoo(submission)
+    var timeleft = 70;
+  var downloadTimer = setInterval(function(){
+  document.getElementById("progressBar").value = 70 - --timeleft;
+  if(timeleft <= 0)
+    clearInterval(downloadTimer);
+  },7000);
     })
  
 
@@ -148,6 +156,7 @@ for(var key in result.scans) {
 
 
 }
+if (result.positives == 0){$('#virustotalResults').text("This site looks safe." )}
             // $('div').text(JSON.stringify(res));
         },
         error: function (request, textStatus, errorThrown, data) {
@@ -161,6 +170,8 @@ for(var key in result.scans) {
             console.log(callback)
         }
 });
+
+
 }
 
 //Screenshot API Connector
