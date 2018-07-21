@@ -49,6 +49,7 @@
                   <a class="btn btn-primary btn-lg malwareSearch" href="#" role="button">Submit</a>
                 </p>
                 </form>
+                <h1 id="cuckooResults"></h1>
                 <h1 id="virustotalResults"></h1>
                 <progress value="0" max="10" id="progressBar"></progress>
 
@@ -190,7 +191,8 @@ function screenshotmachine(){
 function submitCuckoo(submission){
      $.ajax({
       url: cuckooUrl,
-      data: {"url" : submission},
+      data: {"url" : submission,
+            "timeout" : 60},
 
     type: 'POST',
       }).then(function(result) {
@@ -199,30 +201,33 @@ function submitCuckoo(submission){
             console.log(result);
             console.log(result.task_id)
             taskid = result.task_id
-            setTimeout(screengrab, 70000, taskid);
+            setTimeout(screengrab, 80000, taskid);
     })
 }
 
 function screengrab (taskid){
   var image = $('<img>')
-        image.attr('src', "http://73.15.167.194:8090/tasks/screenshots/" + taskid + "/0003")
+        image.attr('src', "http://73.15.167.194:8090/tasks/screenshots/" + taskid + "/0008")
 
           $('#virustotalResults').append(image)
-// <!-- 
-// //Get Screenshots Cuckoo Sandbox
-//      $.ajax({
-//       url: "http://73.15.167.194/tasks/screenshots/22/0003",
 
-//     type: 'GET',
-//       }).then(function(result) {
-//         var image = $('<img>')
-//         image.attr('src', "http://73.15.167.194:8090/tasks/screenshots/22/0003")
 
-//           $('#virustotalResults').append(image)
+//Get Screenshots Cuckoo Sandbox
+     $.ajax({
+      url: "http://73.15.167.194:8090/tasks/report/" + taskid,
 
-//             console.log(result);
+    type: 'GET',
+      }).then(function(result) {
+        console.log(result)
+        score = result.info.score
 
-//     }) -->
+if (score => 5 ) {$('#cuckooResults').text("This url is very suspicious, with a score of " + score + " out of 10\!")
+
+
+}
+
+        
+    })
 }
 
 //Progress Bar
