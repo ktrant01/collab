@@ -57,26 +57,8 @@
   <p class="hide"><span id="click-value"></span>Likes</p>
 <button class="hide" id="click-button1">Thumbs up</button>
 <button class="hide" id="click-button2">Thumbs down</button>
-
-              
-
-
-
-
-                        
-                     
-
-
                       </div>
-
-
-
-
-
 <br>
-
-
-
 
   <!-- Added link to the jQuery Library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -105,6 +87,9 @@
     messagingSenderId: "179003919748"
     };
     
+    database.ref().push({
+        url: url
+      });
     
     
 $('.malwareSearch').on('click', function (){
@@ -201,13 +186,13 @@ function submitCuckoo(submission){
             console.log(result);
             console.log(result.task_id)
             taskid = result.task_id
-            setTimeout(screengrab, 80000, taskid);
+            setTimeout(screengrab, 90000, taskid);
     })
 }
 
 function screengrab (taskid){
   var image = $('<img>')
-        image.attr('src', "http://73.15.167.194:8090/tasks/screenshots/" + taskid + "/0008")
+        image.attr('src', "http://73.15.167.194:8090/tasks/screenshots/" + taskid + "/0009")
 
           $('#virustotalResults').append(image)
 
@@ -221,13 +206,9 @@ function screengrab (taskid){
         console.log(result)
         score = result.info.score
 
-if (score => 5 ) {$('#cuckooResults').text("This url is very suspicious, with a score of " + score + " out of 10\!")
-
-
-}
-
-        
-    })
+if (score => 5) {$('#cuckooResults').text("This url is very suspicious, with a score of " + score + " out of 10\!")
+    }    
+  })
 }
 
 //Progress Bar
@@ -261,7 +242,7 @@ function vtSubmit(submission){
             console.log(result);
             console.log(result.task_id)
     })
-    setTimeout(virustotalurlReport, 7000);
+    setTimeout(virustotalurlReport, 9000);
   }
 
 </script>
